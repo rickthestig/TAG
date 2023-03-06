@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="nb">
+        <button onclick="window.location.href='home.html'">Home</button>
+        <button onclick="window.location.href='view.html'">View</button>
+        <button onclick="window.location.href='add.html'">Add</button>
+        <button onclick="window.location.href='modify.html'">Modify</button>
+    </div>
+    <button id="trb" onclick="window.location.href='logout.html'">Log out</button>
+    <h1>Admin Search</h1>
+    <form action="search.php" method="post">
+        Client <input type="text" id="client" name="client"><br>
+        Start of Year Range<input type="number" id="startyear" name="startyear"><br>
+        End of Year Range <input type="number" id="endyear" name="endyear"><br>
+        Title<input type="text" id="title" name="title"><br>
+        <div class="checkbox-grid">
+			<label><input type="checkbox" name="option1">Option 1</label>
+			<label><input type="checkbox" name="option2">Option 2</label>
+			<label><input type="checkbox" name="option3">Option 3</label>
+			<label><input type="checkbox" name="option4">Option 4</label>
+			<label><input type="checkbox" name="option5">Option 5</label>
+			<label><input type="checkbox" name="option6">Option 6</label>
+        </div>
+        <input type="submit">
+    </form>
+</body>
+</html>
