@@ -17,13 +17,37 @@
         Course <input type="text" id="coruse" name="course"><br>
         // maybe a dropdown
         Student <input type="text" id="sname" name="sname"><br>
+        //TODO: add dropdown for archived or not
         <div class="checkbox-grid">
-			<label><input type="checkbox" name="option1">Option 1</label>
-			<label><input type="checkbox" name="option2">Option 2</label>
-			<label><input type="checkbox" name="option3">Option 3</label>
-			<label><input type="checkbox" name="option4">Option 4</label>
-			<label><input type="checkbox" name="option5">Option 5</label>
-			<label><input type="checkbox" name="option6">Option 6</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Algorithms</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">CMS</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Communication</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Contest</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Database</label>
+
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">e-Commerce</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Education</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Events</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">External</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">External - For Profit</label>
+
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">File Storage</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Internal</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">KMS</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Marketing</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Networks</label>
+
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Open Source</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Procedures</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Programming</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Queries</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Resources</label>
+
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Security</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Social</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Web</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Website</label>
+            <label><input type="checkbox" name="checkbox[]" id="/" value="/">Workshop</label>
         </div>
         <input type="submit">
     </form>
@@ -34,42 +58,33 @@
     $course=$_REQUEST["course"];
     $student=$_REQUEST["sname"];
     // need checkbox request as well
-    $conn = new mysqli("localhost", "root", "", "recipedatabase");
-    //rework conn with data from actual DB
-    if ($recipevar == 'All') {
-        $stmt = $conn->prepare("SELECT * FROM Recipe");
+    $conn = new mysqli("localhost", "kmkelmo1", "vYV7v[66(kX9lD", "kmkelmo1_capstone_database");
+    //main search is proj name
+    if ($name == null) {
+        $stmt = $conn->prepare("SELECT * FROM Project");
         $stmt->execute();
-        $stmt->bind_result($col1,$col2,$col3,$col4,$col5,$col6);
-        echo "<div id=divid><table id=result><tr><th>Recipe Name</th><th>Recipe Description</th><th>Category</th><th>Prep Time</th><th>Cook Time</th><th>RecipeID</th></tr>";
+        $stmt->bind_result($col1,$col2,$col3,$col4,$col5);
+        echo "<div id=divid><table id=result><tr><th>Recipe Name</th><th>Recipe Description</th><th>Category</th><th>Prep Time</th><th>Cook Time</th></tr>";
         while ($stmt->fetch()) {
-            echo "<tr><td>$col1</td><td width=800>$col2</td><td>$col3</td><td>$col4</td><td>$col5</td><td>$col6</td>";} 
+            echo "<tr><td>$col1</td><td width=800>$col2</td><td>$col3</td><td>$col4</td><td>$col5</td>";} 
         echo "</table></div>";
-    } else if ($recipevar != null) {
-        $stmt = $conn->prepare("SELECT * FROM Recipe WHERE RecipeName=?");
-        $stmt->bind_param("s",$recipevar);
-        $stmt->execute();
-        $stmt->bind_result($col1,$col2,$col3,$col4,$col5,$col6);
-        $sql = "SELECT i.IngredientName FROM Ingredients i
-        JOIN RecipeIngredient ri on ri.IngredientID = i.IngredientID
-        JOIN Recipe r on r.RecipeID = ri.RecipeID
-        WHERE r.RecipeName = '$recipevar'";
-        $conn1 = new mysqli("localhost", "root", "", "recipedatabase");
-        $result = $conn1->query($sql);
-
-        echo "<div id=divid><table id=result><tr><th>Recipe Name</th><th>Recipe Description</th><th>Category</th><th>Prep Time</th><th>Cook Time</th><th>RecipeID</th></tr>";
-        while ($stmt->fetch()) {
-            echo "<tr><td>$col1</td><td>$col2</td><td>$col3</td><td>$col4</td><td>$col5</td><td>$col6</td></tr>";
-            echo "<div id=ingdiv><tr><td>Ingredients: </td><td>";
-            while ($row = $result->fetch_assoc()) {
-                $data = $row['IngredientName'];
-                echo " | ";
-                echo $data;
-            }} 
-        
-        echo " |";
-        echo "</td></div>";
-        $stmt->close();
-        echo "</table></div>";
-        /?>
+    } else if ($name != null) {
+        $query = "SELECT ProjectName,ProjectDescription,Course,ProjectYear,Archive,Client.ClientName,Student.FirstName,Student.LastName FROM Project JOIN ProjectAndClient ON Project.ProjectID = ProjectAndClient.ProjectID JOIN Client ON ProjectAndClient.ClientID = Client.ClientID JOIN ProjectAndStudent ON Project.ProjectID = ProjectAndStudent.ProjectID JOIN Student ON ProjectAndStudent.StudentID = Student.StudentID WHERE ProjectName LIKE %$name%";
+        //ADD KEYWORDS
+    }
+    if($client != null){
+        $query = $query . " AND ClientName LIKE %$client%";
+    }
+    if($year != null){
+        $query = $query . " AND ProjectYear LIKE %$year%";
+    }
+    if($course != null){
+        $query = $query . " AND Course LIKE %$course%";
+    }
+    if($name != null){
+        $query = $query . " AND Student.FirstName LIKE %$name% OR Student.LastName LIKE %$name%";
+    }
+    echo $query;
+        ?>
 </body>
 </html>
