@@ -60,15 +60,7 @@
     // need checkbox request as well
     $conn = new mysqli("localhost", "kmkelmo1", "vYV7v[66(kX9lD", "kmkelmo1_capstone_database");
     //main search is proj name
-    if ($name == null) {
-        $stmt = $conn->prepare("SELECT * FROM Project");
-        $stmt->execute();
-        $stmt->bind_result($col1,$col2,$col3,$col4,$col5);
-        echo "<div id=divid><table id=result><tr><th>Recipe Name</th><th>Recipe Description</th><th>Category</th><th>Prep Time</th><th>Cook Time</th></tr>";
-        while ($stmt->fetch()) {
-            echo "<tr><td>$col1</td><td width=800>$col2</td><td>$col3</td><td>$col4</td><td>$col5</td>";} 
-        echo "</table></div>";
-    } else if ($name != null) {
+    if ($name != null) {
         $query = "SELECT ProjectName,ProjectDescription,Course,ProjectYear,Archive,Client.ClientName,Student.FirstName,Student.LastName FROM Project JOIN ProjectAndClient ON Project.ProjectID = ProjectAndClient.ProjectID JOIN Client ON ProjectAndClient.ClientID = Client.ClientID JOIN ProjectAndStudent ON Project.ProjectID = ProjectAndStudent.ProjectID JOIN Student ON ProjectAndStudent.StudentID = Student.StudentID WHERE ProjectName LIKE %$name%";
         //ADD KEYWORDS
     }
@@ -85,6 +77,18 @@
         $query = $query . " AND Student.FirstName LIKE %$name% OR Student.LastName LIKE %$name%";
     }
     echo $query;
+    foreach(checkbox[] as $checkboxres){
+        if(!is_null($checkboxres)){
+            //do query to get result for checkbox and return it to the table below
+        }
+    }
+    $stmt = $conn->prepare($query);
+        $stmt->execute();
+        $stmt->bind_result($col1,$col2,$col3,$col4,$col5);
+        echo "<div id=divid><table id=result><tr><th>Recipe Name</th><th>Recipe Description</th><th>Category</th><th>Prep Time</th><th>Cook Time</th></tr>";
+        while ($stmt->fetch()) {
+            echo "<tr><td>$col1</td><td width=800>$col2</td><td>$col3</td><td>$col4</td><td>$col5</td>";} 
+        echo "</table></div>";
         ?>
 </body>
 </html>
