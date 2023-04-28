@@ -10,7 +10,7 @@
     </div>
     <button id="trb" onclick="window.location.href='logout.html'">Log out</button>
     <h1>Faculty Search</h1>
-    <form action="search.php" method="post">
+    <form action="search faculty.php" method="post">
         Client <input type="text" id="client" name="client"><br>
         Name of Project <input type="text" id="PName" name="PName"><br>
         Year <input type="number" id="year" name="year"><br>
