@@ -63,7 +63,6 @@
     //main search is proj name
     if ($name != null) {
         $query = "SELECT ProjectName,ProjectDescription,Course,ProjectYear,Archive,Client.ClientName,Student.FirstName,Student.LastName, Keyword.Keyword FROM Project JOIN ProjectAndClient ON Project.ProjectID = ProjectAndClient.ProjectID JOIN Client ON ProjectAndClient.ClientID = Client.ClientID JOIN ProjectAndStudent ON Project.ProjectID = ProjectAndStudent.ProjectID JOIN Student ON ProjectAndStudent.StudentID = Student.StudentID JOIN ProjectAndKeyword ON ProjectAndKeyword.ProjectID = Project.ProjectID JOIN Keyword ON Keyword.KeywordID = ProjectAndKeyword.KeywordID WHERE ProjectName LIKE %$name%";
-        //ADD KEYWORDS
     }
     if($client != null){
         $query = $query . " AND ClientName LIKE %$client%";
@@ -75,7 +74,7 @@
         $query = $query . " AND Course LIKE %$course%";
     }
     if($name != null){
-        $query = $query . " AND Student.FirstName LIKE %$sname% OR Student.LastName LIKE %$sname%";
+        $query = $query . " AND Student.FirstName LIKE %$student% OR Student.LastName LIKE %$student%";
     }
     echo $query;
     foreach($checkbox as $checkboxname=>$checkboxvalue){
@@ -91,17 +90,18 @@
             if($BPID == $PID){
                 $query = $query . " AND Keyword.KeywordID LIKE %$KID%";
             }
-            //do query to get result for checkbox and return it to the table below
+            //this is my unholy creation to find the keywords, and i have zero clue if this abombination will function
         }
     }
     $query = $query . ";";
     $stmt = $conn->prepare($query);
         $stmt->execute();
-        $stmt->bind_result($col1,$col2,$col3,$col4,$col5);
-        echo "<div id=divid><table id=result><tr><th>Recipe Name</th><th>Recipe Description</th><th>Category</th><th>Prep Time</th><th>Cook Time</th></tr>";
+        $stmt->bind_result($col1,$col2,$col3,$col4,$col5,$col6,$col7,$col8,$col9);
+        echo "<div id=divid><table id=result><tr><th>Project Name</th><th>Project Description</th><th>Course</th><th>Project Year</th><th>Archived or Not</th><th>Client Name</th><th>Student First Name</th><th>Student Last Name</th><th>Keywords</th></tr>";
         while ($stmt->fetch()) {
-            echo "<tr><td>$col1</td><td width=800>$col2</td><td>$col3</td><td>$col4</td><td>$col5</td>";} 
+            echo "<tr><td>$col1</td><td>$col2</td><td>$col3</td><td>$col4</td><td>$col5</td><td>$col6</td><td>$col7</td><td>$col8</td><td>$col9</td>";} 
         echo "</table></div>";
+        //should bind data to table correctly based on column
         ?>
 </body>
 </html>
